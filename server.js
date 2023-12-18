@@ -19,10 +19,11 @@ mongoose.connect(process.env.MONGODB_URI, {}).then(() => {
 // Importer et utiliser les fichiers de routes
 const inscriptionRoute = require("./routes/inscriptionRoute");
 const connexionRoute = require("./routes/connexionRoute");
+const profilRoute = require("./routes/profilRoute");
 
 app.use("/", inscriptionRoute); // Les routes d'inscription
 app.use("/", connexionRoute); // Les routes de connexion
-
+app.use("/", profilRoute);
 // Gestion des erreurs
 app.use((err, req, res, next) => {
   console.error(err.stack);
