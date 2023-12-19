@@ -10,16 +10,13 @@ router.get("/connexion", (req, res) => {
 
 // Traitement du formulaire de connexion
 router.post("/connexion", async (req, res) => {
-  const { email, motDePasse } = req.body;
+  const { email, password } = req.body;
 
   // Recherche de l'utilisateur par adresse e-mail
   const utilisateur = await Utilisateur.findOne({ email });
 
   // Vérification du mot de passe
-  if (
-    !utilisateur ||
-    !(await bcrypt.compare(motDePasse, utilisateur.motDePasse))
-  ) {
+  if (!utilisateur || !(await bcrypt.compare(password, utilisateur.password))) {
     return res
       .status(401)
       .json({ message: "Adresse e-mail ou mot de passe incorrect." });
