@@ -3,11 +3,20 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config(); // Charger les variables d'environnement depuis le fichier .env
+const session = require("express-session");
 
 // Configurer le moteur de modèle si nécessaire
 app.set("view engine", "ejs");
 
 // Configurer le middleware pour gérer les données JSON et les formulaires
+app.use(
+  session({
+    secret: "myComplex!Secret12345$", // Remplacez par une clé secrète
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,7 +29,11 @@ mongoose.connect(process.env.MONGODB_URI, {}).then(() => {
 const inscriptionRoute = require("./routes/inscriptionRoute");
 const connexionRoute = require("./routes/connexionRoute");
 const profilRoute = require("./routes/profilRoute");
+const recetteRoute = require("./routes/recetteRoute.js");
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
 
+app.use("/", recetteRoute);
 app.use("/", inscriptionRoute); // Les routes d'inscription
 app.use("/", connexionRoute); // Les routes de connexion
 app.use("/", profilRoute);

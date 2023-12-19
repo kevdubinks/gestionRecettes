@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Recettes</title>
+</head>
+<body>
+    <h1>Recettes</h1>
+
+    <!-- Formulaire d'ajout de recette -->
+    <h2>Ajouter une nouvelle recette</h2>
+    <form action="/recettes" method="post">
+        <input type="text" name="title" placeholder="Titre de la recette" required>
+        <textarea name="description" placeholder="Description de la recette" required></textarea>
+        <input type="number" name="prepTime" placeholder="Temps de préparation (en minutes)" required>
+        <input type="number" name="cookingTime" placeholder="Temps de cuisson (en minutes)" required>
+        <!-- Ajoutez d'autres champs ici si nécessaire -->
+        <button type="submit">Ajouter la recette</button>
+    </form>
+
+    <!-- Liste des recettes existantes -->
+    <% if (recettes && recettes.length > 0) { %>
+        <% recettes.forEach(recette => { %>
+            <div>
+                <h2><%= recette.title %></h2>
+                <p>Description: <%= recette.description %></p>
+                <p>Temps de préparation: <%= recette.prepTime %> minutes</p>
+                <p>Temps de cuisson: <%= recette.cookingTime %> minutes</p>
+                <h3>Ingrédients:</h3>
+                <ul>
+                    <% recette.ingredients.forEach(ingredient => { %>
+                        <li><%= ingredient.name %> - <%= ingredient.quantity %></li>
+                    <% }); %>
+                </ul>
+                <a href="/recettes/<%= recette._id %>">Voir plus</a>
+                
+                <!-- Bouton de suppression de recette -->
+                <form action="/recettes/<%= recette._id %>?_method=DELETE" method="post">
+                    <button type="submit">Supprimer</button>
+                </form>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>Aucune recette trouvée.</p>
+    <% } %>
+</body>
+</html>

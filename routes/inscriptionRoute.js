@@ -10,24 +10,34 @@ router.get("/inscription", (req, res) => {
 
 // Traitement du formulaire d'inscription
 router.post("/inscription", async (req, res) => {
-  const { nom, email, motDePasse } = req.body;
+  const { username, email, password } = req.body; // Utilisez les noms de champs corrects
 
   // Vérification si l'adresse e-mail est déjà utilisée
-  const utilisateurExistant = await Utilisateur.findOne({ email });
-  if (utilisateurExistant) {
+  const utilisateurExistantEmail = await Utilisateur.findOne({ email });
+  const utilisateurExistantUsername = await Utilisateur.findOne({ username });
+
+  if (utilisateurExistantEmail) {
     return res
       .status(400)
       .json({ message: "Cette adresse e-mail est déjà utilisée." });
   }
 
+  if (utilisateurExistantUsername) {
+    return res
+      .status(400)
+      .json({ message: "Ce nom d'utilisateur est déjà utilisé." });
+  }
+
   // Hachage du mot de passe
-  const motDePasseHache = await bcrypt.hash(motDePasse, 10);
+
+  const saltRounds = 10; // Nombre de tours de hachage
+  const motDePasseHache = await bcrypt.hash(password, saltRounds); // Utilisation du bon champ
 
   // Création d'un nouvel utilisateur dans la base de données
   const nouvelUtilisateur = new Utilisateur({
-    nom,
+    username, // Utilisation du bon champ
     email,
-    motDePasse: motDePasseHache,
+    password: motDePasseHache, // Utilisation du bon champ
   });
 
   try {

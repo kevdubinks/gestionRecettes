@@ -42,7 +42,7 @@ const recetteSchema = new mongoose.Schema(
       // L'utilisateur qui a créé la recette
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Référence à votre modèle utilisateur
-      required: true,
+      required: false,
     },
     // Ajoutez plus de champs selon vos besoins...
   },

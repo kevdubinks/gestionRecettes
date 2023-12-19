@@ -2,12 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/profil", (req, res) => {
-  // Ici, récupérez les informations de l'utilisateur connecté
-  // Par exemple, si vous utilisez des sessions :
-  // const userInfo = req.session.user;
+  // Assurez-vous que la propriété 'user' dans la session est correcte
+  const userInfo = req.session.user;
+  if (!userInfo) {
+    // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+    return res.redirect("/connexion");
+  }
 
-  // Renvoyez la page de profil avec les informations de l'utilisateur
-  res.render("profil", { utilisateur: userInfo }); // Remplacez 'userInfo' par les données réelles de l'utilisateur
+  // Si l'utilisateur est connecté, affichez sa page de profil
+  // Passez l'objet utilisateur entier à la vue
+  res.render("profil", { utilisateur: userInfo });
 });
 
 module.exports = router;
